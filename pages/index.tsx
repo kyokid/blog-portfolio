@@ -1,14 +1,11 @@
+// @ts-check
+
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import { PostCard, PostWidget, Categories } from '../components'
+import { getPosts } from '../services'
 
-const posts = [
-  { title: 'React Testing', excerpt: 'This is a post about React Testing', slug: 'react-testing' },
-  { title: 'Next.js', excerpt: 'This is a post about Next.js', slug: 'nextjs' },
-];
-
-const Home: NextPage = () => {
+const Home: NextPage = ( {posts}) => {
   return (
     <div className="container mx-auto px-10 mb-8">
       <Head>
@@ -19,7 +16,7 @@ const Home: NextPage = () => {
       <div className='grid grid-cols-1 lg:grid-cols-12 gap-12'>
         <div className='lg:col-span-8 col-span-1'>
           {posts.map((post) => (
-            <PostCard key={post.title} post={post} />
+            <PostCard key={post.title} post={post.node} />
           ))}
         </div>
       </div>
@@ -35,3 +32,13 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export async function getStaticProps() {
+  const posts = await getPosts()
+
+  return {
+    props: {
+      posts,
+    },
+  }
+}
